@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { Eye, EyeOff, Mail, Lock, User, Phone } from 'lucide-react'
 import { useStore } from '@/store/useStore'
 import { apiService } from '@/services/api'
+import { useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 
 const Login = () => {
@@ -20,39 +21,49 @@ const Login = () => {
     phoneNumber: ''
   })
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const loginMutation = useMutation({
+    mutationFn: (payload: { email: string; password: string }) =>
+      apiService.login(payload),
+    onSuccess: (response) => {
+      setCurrentUser(response.user)
+      setToken(response.token)
+      toast.success('¡Bienvenido de vuelta!')
+      navigate('/')
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Error en la autenticación')
+    },
+    onSettled: () => setIsLoading(false),
+  })
+
+  const registerMutation = useMutation({
+    mutationFn: (payload: { email: string; password: string; firstName: string; lastName: string; phoneNumber?: string }) =>
+      apiService.register(payload),
+    onSuccess: (response) => {
+      setCurrentUser(response.user)
+      setToken(response.token)
+      toast.success('¡Cuenta creada exitosamente!')
+      navigate('/')
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Error en la autenticación')
+    },
+    onSettled: () => setIsLoading(false),
+  })
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-
-    try {
-      if (isLogin) {
-        const response = await apiService.login({
-          email: formData.email,
-          password: formData.password
-        })
-        
-        setCurrentUser(response.user)
-        setToken(response.token)
-        toast.success('¡Bienvenido de vuelta!')
-        navigate('/')
-      } else {
-        const response = await apiService.register({
-          email: formData.email,
-          password: formData.password,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          phoneNumber: formData.phoneNumber
-        })
-        
-        setCurrentUser(response.user)
-        setToken(response.token)
-        toast.success('¡Cuenta creada exitosamente!')
-        navigate('/')
-      }
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Error en la autenticación')
-    } finally {
-      setIsLoading(false)
+    if (isLogin) {
+      loginMutation.mutate({ email: formData.email, password: formData.password })
+    } else {
+      registerMutation.mutate({
+        email: formData.email,
+        password: formData.password,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        phoneNumber: formData.phoneNumber,
+      })
     }
   }
 
