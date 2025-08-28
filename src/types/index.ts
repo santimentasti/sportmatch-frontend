@@ -68,9 +68,11 @@ export interface Venue {
 }
 
 export interface MatchResult {
-  LIKE_STORED: 'LIKE_STORED'
-  MATCH_CREATED: 'MATCH_CREATED'
-  TEAM_MATCH_PENDING: 'TEAM_MATCH_PENDING'
+  isMatch: boolean
+  targetUserId: number
+  message: string
+  matchId?: number
+  status: 'LIKE_STORED' | 'MATCH_CREATED' | 'TEAM_MATCH_PENDING'
 }
 
 export interface ApiResponse<T> {
