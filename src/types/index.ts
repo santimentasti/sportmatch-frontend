@@ -75,6 +75,44 @@ export interface MatchResult {
   status: 'LIKE_STORED' | 'MATCH_CREATED' | 'TEAM_MATCH_PENDING'
 }
 
+export interface UserPreference {
+  id: number
+  user: User
+  targetUser: User
+  sport: Sport
+  preferenceType: 'LIKE' | 'DISLIKE' | 'SUPER_LIKE'
+  createdAt: string
+}
+
+export interface Conversation {
+  id: number
+  otherParticipant: User
+  lastMessage?: Message
+  unreadCount: number
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export interface Message {
+  id: number
+  conversationId: number
+  senderId: number
+  senderName: string
+  senderProfileImage?: string
+  content: string
+  messageType: 'TEXT' | 'IMAGE' | 'SYSTEM' | 'MATCH_PROPOSAL' | 'MATCH_CONFIRMATION'
+  isRead: boolean
+  createdAt: string
+  updatedAt?: string
+}
+
+export interface SendMessageRequest {
+  conversationId: number
+  content: string
+  messageType?: 'TEXT' | 'IMAGE' | 'SYSTEM' | 'MATCH_PROPOSAL' | 'MATCH_CONFIRMATION'
+}
+
 export interface ApiResponse<T> {
   data: T
   message?: string

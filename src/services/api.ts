@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { Sport, User, MatchResult } from '@/types'
+import { Sport, User, MatchResult, Conversation, Message, SendMessageRequest } from '@/types'
 import { useStore } from '@/store/useStore'
 
 interface AuthRequest {
@@ -214,8 +214,8 @@ class ApiService {
     return response.data
   }
 
-  async processLike(userId: number, targetUserId: number, sportId: number): Promise<MatchResult> {
-    const response: AxiosResponse<MatchResult> = await this.api.post('/matching/like', null, {
+  async processLike(userId: number, targetUserId: number, sportId: number): Promise<string> {
+    const response: AxiosResponse<string> = await this.api.post('/matching/like', null, {
       params: {
         userId,
         targetUserId,
@@ -259,6 +259,40 @@ class ApiService {
   async logout(): Promise<void> {
     await this.api.post('/auth/logout')
     try { useStore.getState().logout() } catch {}
+  }
+
+  // Chat API
+  async getConversations(): Promise<Conversation[]> {
+    const response: AxiosResponse<Conversation[]> = await this.api.get('/chat/conversations')
+    return response.data
+  }
+
+  async getConversationMessages(conversationId: number, page: number = 0, size: number = 20): Promise<{ content: Message[], totalPages: number, totalElements: number }> {
+    const response = await this.api.get(`/chat/conversations/${conversationId}/messages`, {
+      params: { page, size }
+    })
+    return response.data
+  }
+
+  async sendMessage(request: SendMessageRequest): Promise<Message> {
+    const response: AxiosResponse<Message> = await this.api.post('/chat/messages', request)
+    return response.data
+  }
+
+  async getOrCreateConversation(otherUserId: number, matchId?: number): Promise<Conversation> {
+    const response: AxiosResponse<Conversation> = await this.api.post('/chat/conversations', null, {
+      params: { otherUserId, matchId }
+    })
+    return response.data
+  }
+
+  async markMessagesAsRead(conversationId: number): Promise<void> {
+    await this.api.put(`/chat/conversations/${conversationId}/read`)
+  }
+
+  async getUnreadMessageCount(): Promise<number> {
+    const response: AxiosResponse<number> = await this.api.get('/chat/unread-count')
+    return response.data
   }
 }
 

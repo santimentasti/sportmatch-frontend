@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion, PanInfo, useMotionValue, useTransform } from 'framer-motion'
-import { Heart, X, MapPin, Users, MessageCircle, ArrowLeft } from 'lucide-react'
+import { Heart, X, MapPin, Users, MessageCircle, ArrowLeft, Star } from 'lucide-react'
 import { useStore } from '@/store/useStore'
 import { apiService } from '@/services/api'
-import { User, Sport } from '@/types'
+import { User, Sport, MatchResult } from '@/types'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import toast from 'react-hot-toast'
 
@@ -25,6 +25,8 @@ const Matching = () => {
 
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [sport, setSport] = useState<Sport | null>(null)
+  const [showMatchModal, setShowMatchModal] = useState(false)
+  const [lastMatch, setLastMatch] = useState<MatchResult | null>(null)
 
   // Motion values for swipe animation
   const x = useMotionValue(0)
@@ -61,14 +63,41 @@ const Matching = () => {
     fetchData()
   }, [sportId, userLocation, maxDistance, setPotentialMatches, setIsLoading])
 
-  const handleSwipe = async (direction: 'left' | 'right') => {
+  const handleSwipe = async (direction: 'left' | 'right' | 'up') => {
     if (!currentUser) return
 
     try {
       if (direction === 'right') {
         // Like
-        await apiService.processLike(1, currentUser.id, parseInt(sportId!))
-        toast.success('¡Like enviado!')
+        const result = await apiService.processLike(1, currentUser.id, parseInt(sportId!))
+        
+        if (result === 'MATCH_CREATED') {
+          // Show match modal
+          setLastMatch({
+            isMatch: true,
+            targetUserId: currentUser.id,
+            message: '¡Es un match!',
+            status: 'MATCH_CREATED'
+          })
+          setShowMatchModal(true)
+          toast.success('¡Es un match! 🎉')
+        } else {
+          toast.success('¡Like enviado! ❤️')
+        }
+      } else if (direction === 'up') {
+        // Super Like (treat as regular like for now)
+        const result = await apiService.processLike(1, currentUser.id, parseInt(sportId!))
+        toast.success('¡Super Like enviado! ⭐')
+        
+        if (result === 'MATCH_CREATED') {
+          setLastMatch({
+            isMatch: true,
+            targetUserId: currentUser.id,
+            message: '¡Es un match!',
+            status: 'MATCH_CREATED'
+          })
+          setShowMatchModal(true)
+        }
       } else {
         // Dislike
         await apiService.processDislike(1, currentUser.id, parseInt(sportId!))
@@ -88,7 +117,30 @@ const Matching = () => {
       handleSwipe('right')
     } else if (info.offset.x < -threshold) {
       handleSwipe('left')
+    } else if (info.offset.y < -threshold) {
+      handleSwipe('up')
     }
+  }
+
+  const handleStartChat = async () => {
+    if (!lastMatch) return
+    
+    try {
+      // Create or get conversation
+      const conversation = await apiService.getOrCreateConversation(lastMatch.targetUserId)
+      
+      // Navigate to chat (you'll need to implement chat page)
+      navigate(`/chat/${conversation.id}`)
+    } catch (error) {
+      console.error('Error starting chat:', error)
+      toast.error('Error al iniciar chat')
+    }
+    
+    setShowMatchModal(false)
+  }
+
+  const handleKeepPlaying = () => {
+    setShowMatchModal(false)
   }
 
   // Update current user when index changes
@@ -241,6 +293,13 @@ const Matching = () => {
               </button>
               
               <button
+                onClick={() => handleSwipe('up')}
+                className="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"
+              >
+                <Star className="w-5 h-5" />
+              </button>
+              
+              <button
                 onClick={() => handleSwipe('right')}
                 className="w-14 h-14 bg-success-500 text-white rounded-full flex items-center justify-center hover:bg-success-600 transition-colors shadow-lg"
               >
@@ -252,9 +311,49 @@ const Matching = () => {
       </div>
 
       {/* Instructions */}
-      <div className="text-center text-sm text-gray-500">
+      <div className="text-center text-sm text-gray-500 space-y-1">
         <p>Desliza a la derecha para dar like, a la izquierda para pasar</p>
+        <p>Desliza hacia arriba para dar super like ⭐</p>
       </div>
+
+      {/* Match Modal */}
+      {showMatchModal && lastMatch && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            className="bg-white rounded-2xl p-8 max-w-md w-full text-center"
+          >
+            <div className="mb-6">
+              <Heart className="w-16 h-16 text-red-500 mx-auto mb-4 fill-current animate-pulse" />
+              <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                ¡Es un Match! 🎉
+              </h3>
+              <p className="text-gray-600">
+                A ambos les gusta {sport?.name}. ¡Ahora pueden chatear y coordinar su encuentro deportivo!
+              </p>
+            </div>
+            
+            <div className="flex space-x-4">
+              <button
+                onClick={handleStartChat}
+                className="flex-1 bg-blue-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-600 transition-colors flex items-center justify-center"
+              >
+                <MessageCircle className="w-4 h-4 mr-2" />
+                Enviar mensaje
+              </button>
+              
+              <button
+                onClick={handleKeepPlaying}
+                className="flex-1 bg-gray-200 text-gray-800 py-3 px-4 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+              >
+                Seguir jugando
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   )
 }
