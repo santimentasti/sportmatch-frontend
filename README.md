@@ -1,415 +1,525 @@
-# SportMatch Frontend
+# 🏆 SportMatch - Frontend
 
-Frontend de la aplicación SportMatch - Conecta con jugadores de tu deporte.
+> Aplicación web moderna para conectar deportistas y organizar encuentros deportivos
 
-## 🚀 Tecnologías
+[![React](https://img.shields.io/badge/React-18+-61DAFB.svg?logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5+-3178C6.svg?logo=typescript)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-5+-646CFF.svg?logo=vite)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind-3+-06B6D4.svg?logo=tailwindcss)](https://tailwindcss.com/)
 
-- **React 19**
-- **TypeScript**
-- **Vite**
-- **Tailwind CSS**
-- **React Router DOM**
-- **Zustand** (state management)
-- **Axios** (HTTP Client)
-- **Framer Motion** (animations)
-- **React Hook Form** (forms)
-- **Zod** (validation)
-- **Lucide React** (icons)
-- **React Hot Toast** (notifications)
-- **PWA** (Progressive Web App)
+## 📋 Tabla de Contenidos
 
-## 📋 Prerrequisitos
+- [Descripción](#-descripción)
+- [Características](#-características)
+- [Tecnologías](#-tecnologías)
+- [Requisitos Previos](#-requisitos-previos)
+- [Instalación](#-instalación)
+- [Configuración](#-configuración)
+- [Uso](#-uso)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [Componentes Principales](#-componentes-principales)
+- [Estado Global](#-estado-global)
+- [Testing](#-testing)
+- [Build y Despliegue](#-build-y-despliegue)
+- [PWA](#-pwa)
+- [Contribución](#-contribución)
+- [Licencia](#-licencia)
 
-- Node.js 18+ 
-- npm o yarn
-- Git
+## 🎯 Descripción
 
-## ⚙️ Instalación y Ejecución
+**SportMatch Frontend** es una aplicación web progresiva (PWA) que permite a los deportistas encontrar compañeros y rivales para practicar sus deportes favoritos. Con una interfaz intuitiva tipo "Tinder", los usuarios pueden hacer match con otros jugadores basándose en ubicación, nivel de habilidad y deporte.
 
-### Opción 1: Ejecución Local
+### 🎮 Características Principales
 
-1. **Clonar el repositorio:**
+- **Sistema de Swipe:** Interfaz tipo Tinder para encontrar jugadores
+- **Perfiles Deportivos:** Configura múltiples deportes y niveles de habilidad
+- **Matching en Tiempo Real:** Notificaciones instantáneas de nuevos matches
+- **Chat Integrado:** Comunicación directa con tus matches
+- **Geolocalización:** Encuentra jugadores cerca de ti
+- **Responsive Design:** Funciona en desktop, tablet y móvil
+- **PWA:** Instálalo como app nativa
+
+## ✨ Características
+
+### ✅ Implementadas
+- ✅ Autenticación con JWT y refresh tokens
+- ✅ Sistema de registro y login
+- ✅ Perfil de usuario editable
+- ✅ Configuración de deportes y niveles
+- ✅ Sistema de swipe con animaciones
+- ✅ Detección de matches mutuos
+- ✅ Chat básico entre matches
+- ✅ Geolocalización (GPS + manual)
+- ✅ Diseño responsive
+- ✅ PWA instalable
+- ✅ Dark mode ready
+
+### 🚧 En Desarrollo
+- 🚧 Notificaciones push
+- 🚧 Sistema de calificaciones
+- 🚧 Mapa interactivo de sedes
+- 🚧 Calendario de partidos
+
+### 📅 Futuro
+- 📅 Videollamadas
+- 📅 Compartir en redes sociales
+- 📅 Torneos y ligas
+- 📅 Sistema de logros
+
+## 🛠 Tecnologías
+
+### Core
+- **React 18.2** - Librería UI
+- **TypeScript 5.0** - Type safety
+- **Vite 5.0** - Build tool ultra-rápido
+- **TailwindCSS 3.3** - Utility-first CSS
+
+### Estado y Data Fetching
+- **Zustand** - State management simple y ligero
+- **React Query (TanStack Query)** - Data fetching y caching
+- **Axios** - Cliente HTTP
+
+### UI y Animaciones
+- **Framer Motion** - Animaciones fluidas
+- **Lucide React** - Iconos modernos
+- **React Hot Toast** - Notificaciones elegantes
+
+### Routing y Forms
+- **React Router v6** - Navegación SPA
+- **React Hook Form** - Manejo de formularios
+
+### Desarrollo
+- **ESLint** - Linting
+- **Prettier** - Code formatting
+- **TypeScript** - Type checking
+
+## 📦 Requisitos Previos
+
+- **Node.js 18+** ([Descargar](https://nodejs.org/))
+- **npm 9+** o **pnpm 8+** (recomendado)
+- Backend de SportMatch corriendo (ver [sportmatch-backend](../sportmatch-backend))
+
+## 🚀 Instalación
+
+### 1. Clonar el repositorio
 ```bash
-git clone https://github.com/tu-usuario/sportmatch-frontend.git
+git clone https://github.com/tuusuario/sportmatch-frontend.git
 cd sportmatch-frontend
 ```
 
-2. **Instalar dependencias:**
+### 2. Instalar dependencias
 ```bash
+# Con npm
 npm install
-# o
-yarn install
+
+# Con pnpm (recomendado)
+pnpm install
 ```
 
-3. **Configurar variables de entorno:**
-```bash
-# Crear archivo .env en la raíz del proyecto
+### 3. Configurar variables de entorno
+
+Crear archivo `.env` en la raíz:
+
+```env
+# API Backend
 VITE_API_URL=http://localhost:8080/api
-VITE_APP_NAME=SportMatch
+
+# WebSocket (para chat en tiempo real - futuro)
+VITE_WS_URL=ws://localhost:8080/ws
+
+# Google Maps (opcional - para mapa de sedes)
+VITE_GOOGLE_MAPS_API_KEY=tu_api_key_aqui
 ```
 
-4. **Ejecutar en modo desarrollo:**
+### 4. Ejecutar en desarrollo
 ```bash
 npm run dev
 # o
-yarn dev
+pnpm dev
 ```
 
-La aplicación estará disponible en: `http://localhost:3000`
+La aplicación estará disponible en: `http://localhost:5173`
 
-### Opción 2: Docker
+## ⚙️ Configuración
 
-1. **Construir la imagen:**
-```bash
-docker build -t sportmatch-frontend .
-```
+### Variables de Entorno
 
-2. **Ejecutar el contenedor:**
-```bash
-docker run -p 3000:3000 sportmatch-frontend
-```
+| Variable | Descripción | Requerido | Default |
+|----------|-------------|-----------|---------|
+| `VITE_API_URL` | URL del backend API | Sí | `http://localhost:8080/api` |
+| `VITE_WS_URL` | URL WebSocket | No | - |
+| `VITE_GOOGLE_MAPS_API_KEY` | API Key de Google Maps | No | - |
 
-## 📁 Estructura del Proyecto
+### Configuración de TypeScript (`tsconfig.json`)
 
-```
-src/
-├── components/
-│   ├── Layout.tsx
-│   └── ui/
-│       ├── LoadingSpinner.tsx
-│       └── InstallPWA.tsx
-├── hooks/
-│   └── usePWA.ts
-├── pages/
-│   ├── Home.tsx
-│   ├── Login.tsx
-│   ├── Matching.tsx
-│   ├── NotFound.tsx
-│   ├── Profile.tsx
-│   └── SportSelection.tsx
-├── services/
-│   └── api.ts
-├── store/
-│   └── useStore.ts
-├── types/
-│   └── index.ts
-├── App.tsx
-├── main.tsx
-└── index.css
-```
-
-## 🎨 Características
-
-### ✅ Funcionalidades Implementadas
-
-- **Autenticación completa** - Login/registro con JWT
-- **Selección de deportes** - Filtros por tipo (individual/grupal)
-- **Sistema de matching** - Interfaz tipo Tinder con swipe
-- **Perfil de usuario** - Edición de datos y configuración
-- **Geolocalización** - Detección automática de ubicación
-- **PWA** - Instalable como aplicación móvil
-- **Responsive design** - Optimizado para móvil y desktop
-- **Animaciones** - Transiciones suaves con Framer Motion
-- **Notificaciones** - Feedback visual con React Hot Toast
-
-### 📱 PWA (Progressive Web App)
-
-- **Instalación como app** - Añadir a pantalla de inicio
-- **Funcionamiento offline** - Caché de recursos esenciales
-- **Notificaciones push** - Alertas en tiempo real
-- **Interfaz nativa** - Experiencia similar a app móvil
-
-## 🔧 Configuración
-
-### Vite Config
-```typescript
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { VitePWA } from 'vite-plugin-pwa'
-
-export default defineConfig({
-  plugins: [
-    react(),
-    VitePWA({
-      registerType: 'autoUpdate',
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/api\.sportmatch\.com\/.*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'api-cache',
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 7 // 7 days
-              }
-            }
-          }
-        ]
-      },
-      manifest: {
-        name: 'SportMatch - Conecta con jugadores',
-        short_name: 'SportMatch',
-        description: 'Aplicación tipo Tinder para conectar personas que quieren jugar el mismo deporte',
-        theme_color: '#2563eb',
-        background_color: '#ffffff',
-        display: 'standalone',
-        orientation: 'portrait-primary',
-        scope: '/',
-        start_url: '/',
-        icons: [
-          {
-            src: 'icons/icon-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: 'icons/icon-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
-          }
-        ]
-      }
-    })
-  ],
-  server: {
-    port: 3000,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8080',
-        changeOrigin: true
-      }
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
     }
   }
-})
+}
 ```
 
-### Tailwind Config
+### Configuración de Tailwind (`tailwind.config.js`)
+
 ```javascript
-/** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
         primary: {
           50: '#eff6ff',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
+          100: '#dbeafe',
+          // ... más colores
+          900: '#1e3a8a',
         },
-        secondary: {
-          50: '#f8fafc',
-          500: '#64748b',
-          600: '#475569',
-        }
       },
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-      },
-      animation: {
-        'fade-in': 'fadeIn 0.5s ease-in-out',
-        'slide-up': 'slideUp 0.3s ease-out',
-        'bounce-in': 'bounceIn 0.6s ease-out',
-      }
     },
   },
   plugins: [],
 }
 ```
 
-## 📱 Páginas y Componentes
+## 📖 Uso
 
-### Páginas Principales
-- **Home** - Página de bienvenida con información de la app
-- **Login** - Autenticación (login/registro)
-- **SportSelection** - Selección de deporte para matching
-- **Matching** - Interfaz de swipe tipo Tinder
-- **Profile** - Gestión del perfil de usuario
-- **NotFound** - Página 404
+### Flujo de Usuario Básico
 
-### Componentes UI
-- **Layout** - Estructura principal con navegación
-- **LoadingSpinner** - Indicador de carga
-- **InstallPWA** - Banner de instalación PWA
+1. **Registro/Login**
+   ```
+   http://localhost:5173/login
+   ```
 
-## 🔌 Integración con Backend
+2. **Configurar Perfil Deportivo**
+   - Seleccionar ubicación (GPS o manual)
+   - Elegir deportes
+   - Definir nivel de habilidad
 
-### API Service
-```typescript
-class ApiService {
-  private api: AxiosInstance
+3. **Explorar Deportes**
+   ```
+   http://localhost:5173/sports
+   ```
 
-  constructor() {
-    this.api = axios.create({
-      baseURL: '/api',
-      timeout: 10000,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+4. **Sistema de Swipe**
+   - Seleccionar un deporte
+   - Swipe derecha (like) o izquierda (dislike)
+   - ¡Match automático si hay reciprocidad!
 
-    // Request interceptor para JWT
-    this.api.interceptors.request.use((config) => {
-      const token = localStorage.getItem('token')
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`
-      }
-      return config
-    })
+5. **Chat con Matches**
+   - Coordinar encuentros
+   - Confirmar ubicación y horario
 
-    // Response interceptor para manejo de errores
-    this.api.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        if (error.response?.status === 401) {
-          localStorage.removeItem('token')
-          window.location.href = '/login'
-        }
-        return Promise.reject(error)
-      }
-    )
-  }
-}
+## 📁 Estructura del Proyecto
+
+```
+sportmatch-frontend/
+├── public/
+│   ├── manifest.json          # PWA manifest
+│   └── sw.js                  # Service Worker
+├── src/
+│   ├── components/            # Componentes reutilizables
+│   │   ├── ui/               # Componentes UI base
+│   │   │   ├── LoadingSpinner.tsx
+│   │   │   └── InstallPWA.tsx
+│   │   ├── Layout.tsx        # Layout principal
+│   │   └── UserProfileForm.tsx
+│   ├── pages/                # Páginas/Rutas
+│   │   ├── Home.tsx
+│   │   ├── Login.tsx
+│   │   ├── Profile.tsx
+│   │   ├── SportProfile.tsx
+│   │   ├── SportSelection.tsx
+│   │   ├── Matching.tsx
+│   │   └── NotFound.tsx
+│   ├── services/             # Servicios externos
+│   │   ├── api.ts           # Cliente API (Axios)
+│   │   └── websocket.ts     # WebSocket client
+│   ├── store/               # Estado global
+│   │   └── useStore.ts      # Zustand store
+│   ├── hooks/               # Custom hooks
+│   │   ├── useApi.ts        # React Query hooks
+│   │   ├── useMatching.ts
+│   │   └── usePWA.ts
+│   ├── types/               # TypeScript types
+│   │   └── index.ts
+│   ├── config/              # Configuraciones
+│   │   └── queryClient.ts   # React Query config
+│   ├── App.tsx              # Componente raíz
+│   ├── main.tsx             # Entry point
+│   └── index.css            # Estilos globales
+├── .env                      # Variables de entorno
+├── .env.example             # Ejemplo de .env
+├── vite.config.ts           # Configuración Vite
+├── tailwind.config.js       # Configuración Tailwind
+├── tsconfig.json            # Configuración TypeScript
+└── package.json
 ```
 
-### Estado Global (Zustand)
+## 🧩 Componentes Principales
+
+### Layout
+```tsx
+// src/components/Layout.tsx
+// Componente de layout con navegación y autenticación
+```
+
+### Matching
+```tsx
+// src/pages/Matching.tsx
+// Sistema de swipe con animaciones Framer Motion
+// - Drag & drop
+// - Detección de matches
+// - Modal de confirmación
+```
+
+### SportProfile
+```tsx
+// src/pages/SportProfile.tsx
+// Configuración de deportes y nivel
+// - Geolocalización GPS + manual
+// - Selección múltiple de deportes
+// - Niveles: Beginner/Intermediate/Advanced/Expert
+```
+
+## 🗄️ Estado Global
+
+### Zustand Store
+
 ```typescript
+// src/store/useStore.ts
 interface AppState {
-  // Auth state
+  // Auth
   currentUser: User | null
   token: string | null
   isAuthenticated: boolean
   
-  // Sports state
+  // Sports & Matching
   sports: Sport[]
-  selectedSport: Sport | null
-  
-  // Matching state
   potentialMatches: User[]
   currentMatchIndex: number
   
-  // UI state
-  isLoading: boolean
+  // Location
+  userLocation: { latitude: number; longitude: number } | null
+  maxDistance: number
   
   // Actions
   setCurrentUser: (user: User | null) => void
-  setToken: (token: string | null) => void
   logout: () => void
   // ... más acciones
 }
 ```
 
+### React Query
+
+```typescript
+// src/hooks/useApi.ts
+// Custom hooks con React Query
+export const useSports = () => useQuery({...})
+export const useMatching = () => useMutation({...})
+export const useLogin = () => useMutation({...})
+```
+
 ## 🧪 Testing
 
 ```bash
-# Ejecutar tests
-npm run test
+# Ejecutar tests (próximamente)
+npm test
 
-# Ejecutar tests con UI
-npm run test:ui
-
-# Ejecutar tests con coverage
+# Tests con coverage
 npm run test:coverage
+
+# Tests E2E (próximamente)
+npm run test:e2e
 ```
 
-## 📦 Scripts Disponibles
+### Testing Stack (Planeado)
+- **Vitest** - Unit testing
+- **React Testing Library** - Component testing
+- **Playwright** - E2E testing
+
+## 📦 Build y Despliegue
+
+### Desarrollo
+```bash
+npm run dev
+```
+
+### Preview de producción
+```bash
+npm run build
+npm run preview
+```
+
+### Build para producción
+```bash
+npm run build
+```
+
+Output en `dist/`:
+```
+dist/
+├── index.html
+├── assets/
+│   ├── index-[hash].js
+│   ├── index-[hash].css
+│   └── ...
+└── manifest.json
+```
+
+### Despliegue
+
+#### Vercel (Recomendado)
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel --prod
+```
+
+#### Netlify
+```bash
+# Build command
+npm run build
+
+# Publish directory
+dist
+```
+
+#### Google Cloud Storage + CDN
+```bash
+# Build
+npm run build
+
+# Upload
+gsutil -m rsync -r dist/ gs://your-bucket-name/
+
+# Configure CDN
+gcloud compute backend-buckets create sportmatch-frontend \
+  --gcs-bucket-name=your-bucket-name
+```
+
+## 📱 PWA
+
+### Características PWA
+
+- ✅ **Instalable:** Agrega a pantalla de inicio
+- ✅ **Offline-ready:** Service Worker con cache
+- ✅ **Responsive:** Funciona en todos los tamaños
+- ✅ **App-like:** Sin barras del navegador
+
+### Configuración PWA
 
 ```json
+// public/manifest.json
 {
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
-  }
+  "name": "SportMatch",
+  "short_name": "SportMatch",
+  "description": "Encuentra compañeros deportivos",
+  "theme_color": "#2563eb",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
 ```
 
-## 📦 Docker
+### Instalación PWA
 
-### Dockerfile
-```dockerfile
-FROM node:18-alpine
-
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm ci --only=production
-
-COPY . .
-RUN npm run build
-
-EXPOSE 3000
-
-CMD ["npm", "run", "preview"]
-```
-
-### docker-compose.yml
-```yaml
-version: '3.8'
-services:
-  frontend:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      VITE_API_URL: http://localhost:8080/api
-    depends_on:
-      - backend
-
-  backend:
-    image: sportmatch-backend:latest
-    ports:
-      - "8080:8080"
-```
-
-## 🚀 Despliegue
-
-### Vercel
-```bash
-# Instalar Vercel CLI
-npm i -g vercel
-
-# Desplegar
-vercel
-```
-
-### Netlify
-```bash
-# Construir el proyecto
-npm run build
-
-# Desplegar manualmente o con CI/CD
+```typescript
+// src/hooks/usePWA.ts
+// Detecta si la PWA es instalable y muestra prompt
+const { isInstallable, installApp } = usePWA()
 ```
 
 ## 🤝 Contribución
 
+¡Las contribuciones son bienvenidas!
+
 1. Fork el proyecto
-2. Crear una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+2. Crea tu feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'feat: Add some AmazingFeature'`)
 4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abrir un Pull Request
+5. Abre un Pull Request
+
+### Guidelines
+- Usa TypeScript estrictamente
+- Sigue las convenciones de nombres (camelCase, PascalCase)
+- Máximo 20 líneas por función
+- Escribe tests para nuevas features
+- Documenta componentes complejos
+
+## 🗺️ Roadmap
+
+Ver [Roadmap completo](../ROADMAP.md)
+
+### v1.0 (MVP) ✅
+- [x] Autenticación
+- [x] Perfiles deportivos
+- [x] Sistema de matching
+- [x] Chat básico
+
+### v1.1 (En progreso)
+- [ ] Notificaciones push
+- [ ] Mejoras en UI/UX
+- [ ] Performance optimizations
+- [ ] Tests automatizados
+
+### v2.0 (Futuro)
+- [ ] Mapa interactivo
+- [ ] Sistema de torneos
+- [ ] Videollamadas
+- [ ] Analytics dashboard
 
 ## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para detalles.
+Este proyecto está bajo la Licencia MIT - ver [LICENSE](LICENSE)
 
-## 📞 Contacto
+## 👨‍💻 Autor
 
-- **Desarrollador:** Tu Nombre
-- **Email:** tu-email@ejemplo.com
-- **GitHub:** [@tu-usuario](https://github.com/tu-usuario)
+**Tu Nombre**
+- GitHub: [@tuusuario](https://github.com/tuusuario)
+- LinkedIn: [Tu Perfil](https://linkedin.com/in/tuperfil)
 
-## 🔗 Enlaces Relacionados
+## 🙏 Agradecimientos
 
-- [Backend Repository](https://github.com/tu-usuario/sportmatch-backend)
-- [Documentación PWA](docs/MOBILE.md)
-- [Guía de Despliegue](docs/DEPLOYMENT.md) 
+- React team por una librería increíble
+- Vercel por Vite
+- Tailwind Labs por TailwindCSS
+- Todos los beta testers
+
+---
+
+<div align="center">
+  <strong>⭐ Si te gusta el proyecto, dale una estrella!</strong>
+  <br>
+  <sub>Hecho con ❤️ para deportistas</sub>
+</div>
