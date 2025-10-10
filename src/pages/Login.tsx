@@ -43,7 +43,7 @@ const Login = () => {
       setCurrentUser(response.user)
       setToken(response.token)
       toast.success('¡Cuenta creada exitosamente!')
-      navigate('/')
+      navigate('/sport-profile')
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || 'Error en la autenticación')

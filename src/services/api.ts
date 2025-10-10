@@ -28,7 +28,7 @@ class ApiService {
 
   constructor() {
     this.api = axios.create({
-      baseURL: '/api',
+      baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
@@ -192,6 +192,10 @@ class ApiService {
       params: { maxDistanceKm }
     })
     return response.data
+  }
+
+  async saveUserSports(userId: number, sports: Array<{ sportId: number; skillLevel: string }>): Promise<void> {
+    await this.api.post(`/users/${userId}/sports`, sports)
   }
 
   // Matching API

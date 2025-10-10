@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { User, Settings, MapPin, Edit, Save, X, Camera, Bell, Shield } from 'lucide-react'
+import { User, Settings, MapPin, Edit, Save, X, Camera, Bell, Shield, Trophy } from 'lucide-react'
 import { useStore } from '@/store/useStore'
 import { apiService } from '@/services/api'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
@@ -114,6 +115,13 @@ const Profile = () => {
         <p className="text-gray-600">
           Gestiona tu información personal y preferencias
         </p>
+        <Link
+          to="/sport-profile"
+          className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+        >
+          <Trophy className="w-4 h-4 mr-2" />
+          Configurar Deportes
+        </Link>
       </div>
 
       {/* Profile Card */}

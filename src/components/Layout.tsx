@@ -1,7 +1,9 @@
 import { ReactNode } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { Home, Users, User, Settings } from 'lucide-react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Home, Users, User, LogOut, Trophy } from 'lucide-react'
+import { useStore } from '@/store/useStore'
 import InstallPWA from './ui/InstallPWA'
+import toast from 'react-hot-toast'
 
 interface LayoutProps {
   children: ReactNode
@@ -9,12 +11,23 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   const location = useLocation()
+  const navigate = useNavigate()
+  const { logout, currentUser } = useStore()
 
   const navigation = [
     { name: 'Inicio', href: '/', icon: Home },
     { name: 'Deportes', href: '/sports', icon: Users },
     { name: 'Perfil', href: '/profile', icon: User },
   ]
+  
+  // Link to sport profile in profile dropdown or as a separate option
+  const sportProfileLink = { name: 'Perfil Deportivo', href: '/sport-profile', icon: Trophy }
+
+  const handleLogout = () => {
+    logout()
+    toast.success('Sesión cerrada exitosamente')
+    navigate('/login')
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -34,27 +47,40 @@ const Layout = ({ children }: LayoutProps) => {
               </Link>
             </div>
             
-            <nav className="hidden md:flex space-x-8">
-              {navigation.map((item) => {
-                const Icon = item.icon
-                const isActive = location.pathname === item.href
-                
-                return (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                      isActive
-                        ? 'text-primary-600 bg-primary-50'
-                        : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span>{item.name}</span>
-                  </Link>
-                )
-              })}
-            </nav>
+            <div className="flex items-center space-x-4">
+              <nav className="hidden md:flex space-x-8">
+                {navigation.map((item) => {
+                  const Icon = item.icon
+                  const isActive = location.pathname === item.href
+                  
+                  return (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                        isActive
+                          ? 'text-primary-600 bg-primary-50'
+                          : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span>{item.name}</span>
+                    </Link>
+                  )
+                })}
+              </nav>
+              
+              {currentUser && (
+                <button
+                  onClick={handleLogout}
+                  className="hidden md:flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors"
+                  title="Cerrar sesión"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Salir</span>
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </header>
@@ -86,6 +112,15 @@ const Layout = ({ children }: LayoutProps) => {
               </Link>
             )
           })}
+          {currentUser && (
+            <button
+              onClick={handleLogout}
+              className="flex flex-col items-center py-2 px-3 text-xs font-medium text-red-600 hover:text-red-700 transition-colors"
+            >
+              <LogOut className="w-5 h-5 mb-1" />
+              <span>Salir</span>
+            </button>
+          )}
         </div>
       </nav>
     </div>

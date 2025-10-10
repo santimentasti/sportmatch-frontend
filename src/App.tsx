@@ -9,6 +9,7 @@ const Home = lazy(() => import('./pages/Home.tsx'))
 const SportSelection = lazy(() => import('./pages/SportSelection.tsx'))
 const Matching = lazy(() => import('./pages/Matching.tsx'))
 const Profile = lazy(() => import('./pages/Profile.tsx'))
+const SportProfile = lazy(() => import('./pages/SportProfile.tsx'))
 const Login = lazy(() => import('./pages/Login.tsx'))
 const NotFound = lazy(() => import('./pages/NotFound.tsx'))
 
@@ -35,6 +36,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/sports" element={<SportSelection />} />
+              <Route path="/sport-profile" element={<SportProfile />} />
               <Route path="/matching/:sportId" element={<Matching />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="*" element={<NotFound />} />

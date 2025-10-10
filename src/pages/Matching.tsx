@@ -12,7 +12,7 @@ const Matching = () => {
   const { sportId } = useParams<{ sportId: string }>()
   const navigate = useNavigate()
   const { 
-    selectedSport, 
+    currentUser: loggedInUser,
     potentialMatches, 
     setPotentialMatches, 
     currentMatchIndex, 
@@ -23,7 +23,7 @@ const Matching = () => {
     setIsLoading 
   } = useStore()
 
-  const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [currentCardUser, setCurrentCardUser] = useState<User | null>(null)
   const [sport, setSport] = useState<Sport | null>(null)
   const [showMatchModal, setShowMatchModal] = useState(false)
   const [lastMatch, setLastMatch] = useState<MatchResult | null>(null)
@@ -35,7 +35,13 @@ const Matching = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!sportId) return
+      if (!sportId || !loggedInUser) {
+        if (!loggedInUser) {
+          toast.error('Debes iniciar sesión')
+          navigate('/login')
+        }
+        return
+      }
 
       setIsLoading(true)
       try {
@@ -43,9 +49,9 @@ const Matching = () => {
         const sportData = await apiService.getSportById(parseInt(sportId))
         setSport(sportData)
 
-        // Fetch potential matches
+        // Fetch potential matches with current user ID
         const matches = await apiService.getPotentialMatches(
-          1, // TODO: Get current user ID from auth
+          loggedInUser.id,
           parseInt(sportId),
           userLocation?.latitude,
           userLocation?.longitude,
@@ -61,21 +67,21 @@ const Matching = () => {
     }
 
     fetchData()
-  }, [sportId, userLocation, maxDistance, setPotentialMatches, setIsLoading])
+  }, [sportId, loggedInUser, userLocation, maxDistance, setPotentialMatches, setIsLoading, navigate])
 
   const handleSwipe = async (direction: 'left' | 'right' | 'up') => {
-    if (!currentUser) return
+    if (!currentCardUser || !loggedInUser) return
 
     try {
       if (direction === 'right') {
         // Like
-        const result = await apiService.processLike(1, currentUser.id, parseInt(sportId!))
+        const result = await apiService.processLike(loggedInUser.id, currentCardUser.id, parseInt(sportId!))
         
         if (result === 'MATCH_CREATED') {
           // Show match modal
           setLastMatch({
             isMatch: true,
-            targetUserId: currentUser.id,
+            targetUserId: currentCardUser.id,
             message: '¡Es un match!',
             status: 'MATCH_CREATED'
           })
@@ -86,13 +92,13 @@ const Matching = () => {
         }
       } else if (direction === 'up') {
         // Super Like (treat as regular like for now)
-        const result = await apiService.processLike(1, currentUser.id, parseInt(sportId!))
+        const result = await apiService.processLike(loggedInUser.id, currentCardUser.id, parseInt(sportId!))
         toast.success('¡Super Like enviado! ⭐')
         
         if (result === 'MATCH_CREATED') {
           setLastMatch({
             isMatch: true,
-            targetUserId: currentUser.id,
+            targetUserId: currentCardUser.id,
             message: '¡Es un match!',
             status: 'MATCH_CREATED'
           })
@@ -100,7 +106,7 @@ const Matching = () => {
         }
       } else {
         // Dislike
-        await apiService.processDislike(1, currentUser.id, parseInt(sportId!))
+        await apiService.processDislike(loggedInUser.id, currentCardUser.id, parseInt(sportId!))
       }
     } catch (error) {
       console.error('Error processing swipe:', error)
@@ -111,7 +117,7 @@ const Matching = () => {
     setCurrentMatchIndex(currentMatchIndex + 1)
   }
 
-  const handleDragEnd = (event: any, info: PanInfo) => {
+  const handleDragEnd = (_event: any, info: PanInfo) => {
     const threshold = 100
     if (info.offset.x > threshold) {
       handleSwipe('right')
@@ -143,12 +149,12 @@ const Matching = () => {
     setShowMatchModal(false)
   }
 
-  // Update current user when index changes
+  // Update current card user when index changes
   useEffect(() => {
     if (potentialMatches.length > 0 && currentMatchIndex < potentialMatches.length) {
-      setCurrentUser(potentialMatches[currentMatchIndex])
+      setCurrentCardUser(potentialMatches[currentMatchIndex])
     } else {
-      setCurrentUser(null)
+      setCurrentCardUser(null)
     }
   }, [currentMatchIndex, potentialMatches])
 
@@ -189,7 +195,7 @@ const Matching = () => {
     )
   }
 
-  if (!currentUser) {
+  if (!currentCardUser) {
     return (
       <div className="text-center py-12 space-y-4">
         <Heart className="w-16 h-16 text-primary-600 mx-auto" />
@@ -233,10 +239,10 @@ const Matching = () => {
         >
           {/* User Image */}
           <div className="relative h-3/4 bg-gradient-to-br from-primary-100 to-primary-200">
-            {currentUser.profileImage ? (
+            {currentCardUser.profileImage ? (
               <img
-                src={currentUser.profileImage}
-                alt={`${currentUser.firstName} ${currentUser.lastName}`}
+                src={currentCardUser.profileImage}
+                alt={`${currentCardUser.firstName} ${currentCardUser.lastName}`}
                 className="w-full h-full object-cover"
               />
             ) : (
@@ -268,7 +274,7 @@ const Matching = () => {
           <div className="p-6 space-y-4">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">
-                {currentUser.firstName} {currentUser.lastName}
+                {currentCardUser.firstName} {currentCardUser.lastName}
               </h2>
               <p className="text-gray-600">
                 Jugador de {sport.name}

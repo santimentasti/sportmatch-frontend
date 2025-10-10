@@ -90,9 +90,13 @@ const Home = () => {
             <Users className="w-5 h-5 mr-2" />
             Explorar Deportes
           </Link>
-          <button className="btn-secondary text-lg px-8 py-3">
-            Ver Demo
-          </button>
+          <Link
+            to="/sport-profile"
+            className="btn-secondary text-lg px-8 py-3 inline-flex items-center justify-center"
+          >
+            <Trophy className="w-5 h-5 mr-2" />
+            Configurar Perfil Deportivo
+          </Link>
         </motion.div>
       </section>
 
