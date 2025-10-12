@@ -32,7 +32,7 @@ export default defineConfig({
       manifest: {
         name: 'SportMatch - Conecta con jugadores',
         short_name: 'SportMatch',
-        description: 'Aplicación tipo Tinder para conectar personas que quieren jugar el mismo deporte',
+        description: 'Aplicación para conectar personas que quieren practicar el mismo deporte',
         theme_color: '#2563eb',
         background_color: '#ffffff',
         display: 'standalone',

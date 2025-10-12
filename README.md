@@ -27,11 +27,11 @@
 
 ## 🎯 Descripción
 
-**SportMatch Frontend** es una aplicación web progresiva (PWA) que permite a los deportistas encontrar compañeros y rivales para practicar sus deportes favoritos. Con una interfaz intuitiva tipo "Tinder", los usuarios pueden hacer match con otros jugadores basándose en ubicación, nivel de habilidad y deporte.
+**SportMatch Frontend** es una aplicación web progresiva (PWA) que permite a los deportistas encontrar compañeros y rivales para practicar sus deportes favoritos. Con una interfaz intuitiva de swipe (deslizamiento), los usuarios pueden hacer match con otros jugadores basándose en ubicación, nivel de habilidad y deporte.
 
 ### 🎮 Características Principales
 
-- **Sistema de Swipe:** Interfaz tipo Tinder para encontrar jugadores
+- **Sistema de Swipe:** Interfaz de deslizamiento para encontrar jugadores
 - **Perfiles Deportivos:** Configura múltiples deportes y niveles de habilidad
 - **Matching en Tiempo Real:** Notificaciones instantáneas de nuevos matches
 - **Chat Integrado:** Comunicación directa con tus matches
@@ -48,8 +48,11 @@
 - ✅ Configuración de deportes y niveles
 - ✅ Sistema de swipe con animaciones
 - ✅ Detección de matches mutuos
-- ✅ Chat básico entre matches
+- ✅ Chat en tiempo real con WebSocket
 - ✅ Geolocalización (GPS + manual)
+- ✅ Mapa interactivo con Google Maps
+- ✅ Búsqueda de sedes deportivas
+- ✅ Filtros por deporte y distancia
 - ✅ Diseño responsive
 - ✅ PWA instalable
 - ✅ Dark mode ready
@@ -57,7 +60,6 @@
 ### 🚧 En Desarrollo
 - 🚧 Notificaciones push
 - 🚧 Sistema de calificaciones
-- 🚧 Mapa interactivo de sedes
 - 🚧 Calendario de partidos
 
 ### 📅 Futuro
@@ -78,6 +80,10 @@
 - **Zustand** - State management simple y ligero
 - **React Query (TanStack Query)** - Data fetching y caching
 - **Axios** - Cliente HTTP
+
+### Mapas y Geolocalización
+- **@react-google-maps/api** - Google Maps integración oficial
+- **Geolocation API** - Ubicación del navegador
 
 ### UI y Animaciones
 - **Framer Motion** - Animaciones fluidas
@@ -118,18 +124,24 @@ pnpm install
 
 ### 3. Configurar variables de entorno
 
-Crear archivo `.env` en la raíz:
+Crear archivo `.env` en la raíz (copiar desde `.env.example`):
+
+```bash
+cp .env.example .env
+```
+
+Editar `.env`:
 
 ```env
 # API Backend
 VITE_API_URL=http://localhost:8080/api
 
-# WebSocket (para chat en tiempo real - futuro)
-VITE_WS_URL=ws://localhost:8080/ws
-
-# Google Maps (opcional - para mapa de sedes)
+# Google Maps API Key (REQUERIDO para ver el mapa de sedes)
+# Obtener en: https://console.cloud.google.com/google/maps-apis
 VITE_GOOGLE_MAPS_API_KEY=tu_api_key_aqui
 ```
+
+📖 **Ver [GOOGLE_MAPS_SETUP.md](./GOOGLE_MAPS_SETUP.md)** para instrucciones detalladas de configuración de Google Maps.
 
 ### 4. Ejecutar en desarrollo
 ```bash
@@ -147,8 +159,20 @@ La aplicación estará disponible en: `http://localhost:5173`
 | Variable | Descripción | Requerido | Default |
 |----------|-------------|-----------|---------|
 | `VITE_API_URL` | URL del backend API | Sí | `http://localhost:8080/api` |
-| `VITE_WS_URL` | URL WebSocket | No | - |
-| `VITE_GOOGLE_MAPS_API_KEY` | API Key de Google Maps | No | - |
+| `VITE_GOOGLE_MAPS_API_KEY` | API Key de Google Maps | Sí (para mapa) | - |
+
+### Configuración de Google Maps
+
+El mapa de sedes deportivas requiere una API Key de Google Maps:
+
+1. **Obtener API Key**: [Google Cloud Console](https://console.cloud.google.com/google/maps-apis)
+2. **Habilitar APIs**: Maps JavaScript API
+3. **Configurar restricciones**: Agrega `http://localhost:*` para desarrollo
+4. **Agregar a `.env`**: `VITE_GOOGLE_MAPS_API_KEY=tu_key`
+
+**Alternativa gratuita**: Puedes usar Leaflet + OpenStreetMap (sin API Key)
+
+📖 **Guía completa**: Ver [GOOGLE_MAPS_SETUP.md](./GOOGLE_MAPS_SETUP.md)
 
 ### Configuración de TypeScript (`tsconfig.json`)
 

@@ -65,6 +65,7 @@ export interface Venue {
   websiteUrl?: string
   isActive: boolean
   supportedSports: Sport[]
+  distanceKm?: number
 }
 
 export interface MatchResult {
@@ -127,4 +128,30 @@ export interface PaginatedResponse<T> {
   number: number
   first: boolean
   last: boolean
+}
+
+export interface UserStats {
+  userId: number
+  firstName: string
+  lastName: string
+  email: string
+  imageUrl?: string
+  memberSince: string
+  totalMatches: number
+  completedMatches: number
+  pendingMatches: number
+  averageRating: number
+  totalRatings: number
+  sportStats: SportStat[]
+  messagesCount: number
+  lastActive: string
+  achievements: string[]
+}
+
+export interface SportStat {
+  sportId: number
+  sportName: string
+  skillLevel: string
+  matchesPlayed: number
+  averageRating: number
 } 

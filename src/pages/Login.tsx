@@ -6,6 +6,7 @@ import { useStore } from '@/store/useStore'
 import { apiService } from '@/services/api'
 import { useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
+import { MOTIVATIONAL_TEXTS } from '@/constants/motivationalTexts'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -27,7 +28,7 @@ const Login = () => {
     onSuccess: (response) => {
       setCurrentUser(response.user)
       setToken(response.token)
-      toast.success('¡Bienvenido de vuelta!')
+      toast.success(MOTIVATIONAL_TEXTS.auth.loginSuccess)
       navigate('/')
     },
     onError: (error: any) => {
@@ -42,7 +43,7 @@ const Login = () => {
     onSuccess: (response) => {
       setCurrentUser(response.user)
       setToken(response.token)
-      toast.success('¡Cuenta creada exitosamente!')
+      toast.success(MOTIVATIONAL_TEXTS.auth.registerSuccess)
       navigate('/sport-profile')
     },
     onError: (error: any) => {
@@ -83,10 +84,10 @@ const Login = () => {
           className="text-center"
         >
           <h2 className="text-3xl font-bold text-gray-900">
-            {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
+            {MOTIVATIONAL_TEXTS.auth.welcomeTitle}
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            {isLogin ? 'Accede a tu cuenta de SportMatch' : 'Únete a SportMatch'}
+            {MOTIVATIONAL_TEXTS.auth.welcomeSubtitle}
           </p>
         </motion.div>
 
@@ -208,7 +209,7 @@ const Login = () => {
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
-                isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'
+                isLogin ? MOTIVATIONAL_TEXTS.auth.loginButton : MOTIVATIONAL_TEXTS.auth.registerButton
               )}
             </button>
           </div>

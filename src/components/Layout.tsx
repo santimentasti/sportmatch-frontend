@@ -1,9 +1,10 @@
 import { ReactNode } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Home, Users, User, LogOut, Trophy } from 'lucide-react'
+import { Home, Users, User, LogOut, MessageCircle, MapPin, Bell } from 'lucide-react'
 import { useStore } from '@/store/useStore'
 import InstallPWA from './ui/InstallPWA'
 import toast from 'react-hot-toast'
+import { MOTIVATIONAL_TEXTS } from '@/constants/motivationalTexts'
 
 interface LayoutProps {
   children: ReactNode
@@ -17,15 +18,15 @@ const Layout = ({ children }: LayoutProps) => {
   const navigation = [
     { name: 'Inicio', href: '/', icon: Home },
     { name: 'Deportes', href: '/sports', icon: Users },
-    { name: 'Perfil', href: '/profile', icon: User },
+    { name: 'Sedes', href: '/venues', icon: MapPin },
+    { name: 'Chat', href: '/chat', icon: MessageCircle },
+    { name: 'Notificaciones', href: '/notifications', icon: Bell },
+    { name: 'Mi Perfil', href: '/profile/stats', icon: User },
   ]
-  
-  // Link to sport profile in profile dropdown or as a separate option
-  const sportProfileLink = { name: 'Perfil Deportivo', href: '/sport-profile', icon: Trophy }
 
   const handleLogout = () => {
     logout()
-    toast.success('Sesión cerrada exitosamente')
+    toast.success(MOTIVATIONAL_TEXTS.auth.logoutSuccess)
     navigate('/login')
   }
 

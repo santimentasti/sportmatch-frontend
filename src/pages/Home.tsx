@@ -5,6 +5,7 @@ import { Users, MapPin, Heart, Trophy } from 'lucide-react'
 import { useStore } from '@/store/useStore'
 import { apiService } from '@/services/api'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
+import { MOTIVATIONAL_TEXTS } from '@/constants/motivationalTexts'
 
 const Home = () => {
   const { sports, setSports, isLoading, setIsLoading } = useStore()
@@ -30,23 +31,23 @@ const Home = () => {
   const features = [
     {
       icon: Users,
-      title: 'Conecta con Jugadores',
-      description: 'Encuentra personas que comparten tu pasión por el deporte'
+      title: 'Crece con tu Comunidad',
+      description: 'Encuentra aliados que te impulsan a ser mejor cada día'
     },
     {
       icon: MapPin,
-      title: 'Ubicación Inteligente',
-      description: 'Filtra por distancia y encuentra jugadores cerca de ti'
+      title: 'Oportunidades Cerca de Ti',
+      description: 'Tu próximo desafío está a la vuelta de la esquina'
     },
     {
       icon: Heart,
-      title: 'Matching Intuitivo',
-      description: 'Sistema tipo Tinder para conectar fácilmente'
+      title: 'Conexiones Perfectas',
+      description: 'Encuentra tu match deportivo ideal al instante'
     },
     {
       icon: Trophy,
-      title: 'Deportes Variados',
-      description: 'Desde deportes individuales hasta deportes de equipo'
+      title: 'Sin Límites',
+      description: 'Desafíate en cualquier deporte, expande tus horizontes'
     }
   ]
 
@@ -68,12 +69,12 @@ const Home = () => {
           transition={{ duration: 0.6 }}
         >
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
-            Conecta con{' '}
-            <span className="text-primary-600">jugadores</span>
+            Cada día es una{' '}
+            <span className="text-primary-600">oportunidad</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Encuentra personas que comparten tu pasión por el deporte. 
-            Desde tenis hasta fútbol, conecta y juega.
+            Supérate, conecta con tu comunidad y vive el deporte como nunca antes. 
+            Tu mejor versión te está esperando.
           </p>
         </motion.div>
 
@@ -83,13 +84,13 @@ const Home = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
-          <Link
-            to="/sports"
-            className="btn-primary text-lg px-8 py-3 inline-flex items-center justify-center"
-          >
-            <Users className="w-5 h-5 mr-2" />
-            Explorar Deportes
-          </Link>
+            <Link
+              to="/sports"
+              className="btn-primary text-lg px-8 py-3 inline-flex items-center justify-center"
+            >
+              <Users className="w-5 h-5 mr-2" />
+              {MOTIVATIONAL_TEXTS.home.cta}
+            </Link>
           <Link
             to="/sport-profile"
             className="btn-secondary text-lg px-8 py-3 inline-flex items-center justify-center"
@@ -122,68 +123,7 @@ const Home = () => {
           </motion.div>
         ))}
       </section>
-
-      {/* Sports Preview */}
-      {sports.length > 0 && (
-        <section className="space-y-6">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
-              Deportes Disponibles
-            </h2>
-            <p className="text-gray-600">
-              Explora los deportes que puedes practicar
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sports.slice(0, 6).map((sport, index) => (
-              <motion.div
-                key={sport.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="card hover:shadow-lg transition-shadow cursor-pointer"
-              >
-                <div className="aspect-video bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                  {sport.imageUrl ? (
-                    <img
-                      src={sport.imageUrl}
-                      alt={sport.name}
-                      className="w-full h-full object-cover rounded-lg"
-                    />
-                  ) : (
-                    <Trophy className="w-12 h-12 text-gray-400" />
-                  )}
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {sport.name}
-                </h3>
-                <p className="text-gray-600 text-sm mb-3">
-                  {sport.description}
-                </p>
-                <div className="flex items-center justify-between text-sm text-gray-500">
-                  <span>
-                    {sport.isTeamSport ? 'Equipo' : 'Individual'}
-                  </span>
-                  <span>
-                    {sport.minPlayers}-{sport.maxPlayers} jugadores
-                  </span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="text-center">
-            <Link
-              to="/sports"
-              className="btn-primary inline-flex items-center"
-            >
-              Ver Todos los Deportes
-              <Users className="w-4 h-4 ml-2" />
-            </Link>
-          </div>
-        </section>
-      )}
+      
     </div>
   )
 }

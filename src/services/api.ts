@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { Sport, User, MatchResult, Conversation, Message, SendMessageRequest } from '@/types'
+import { Sport, User, MatchResult, Conversation, Message, SendMessageRequest, Venue, UserStats } from '@/types'
 import { useStore } from '@/store/useStore'
 
 interface AuthRequest {
@@ -198,6 +198,16 @@ class ApiService {
     await this.api.post(`/users/${userId}/sports`, sports)
   }
 
+  async getUserStats(userId: number): Promise<UserStats> {
+    const response: AxiosResponse<UserStats> = await this.api.get(`/users/${userId}/stats`)
+    return response.data
+  }
+
+  async getMyStats(): Promise<UserStats> {
+    const response: AxiosResponse<UserStats> = await this.api.get(`/users/me/stats`)
+    return response.data
+  }
+
   // Matching API
   async getPotentialMatches(
     userId: number,
@@ -265,38 +275,75 @@ class ApiService {
     try { useStore.getState().logout() } catch {}
   }
 
-  // Chat API
-  async getConversations(): Promise<Conversation[]> {
-    const response: AxiosResponse<Conversation[]> = await this.api.get('/chat/conversations')
+  // Generic HTTP methods (DRY principle)
+  async get<T>(url: string, params?: Record<string, any>): Promise<T> {
+    const response: AxiosResponse<T> = await this.api.get(url, { params })
     return response.data
   }
 
-  async getConversationMessages(conversationId: number, page: number = 0, size: number = 20): Promise<{ content: Message[], totalPages: number, totalElements: number }> {
-    const response = await this.api.get(`/chat/conversations/${conversationId}/messages`, {
-      params: { page, size }
-    })
+  async post<T>(url: string, data?: any, params?: Record<string, any>): Promise<T> {
+    const response: AxiosResponse<T> = await this.api.post(url, data, { params })
     return response.data
+  }
+
+  async put<T>(url: string, data?: any, params?: Record<string, any>): Promise<T> {
+    const response: AxiosResponse<T> = await this.api.put(url, data, { params })
+    return response.data
+  }
+
+  async delete<T>(url: string): Promise<T> {
+    const response: AxiosResponse<T> = await this.api.delete(url)
+    return response.data
+  }
+
+  // Chat API
+  async getConversations(): Promise<Conversation[]> {
+    return this.get<Conversation[]>('/chat/conversations')
+  }
+
+  async getConversationMessages(
+    conversationId: number,
+    page: number = 0,
+    size: number = 20
+  ): Promise<{ content: Message[]; totalPages: number; totalElements: number }> {
+    return this.get(`/chat/conversations/${conversationId}/messages`, { page, size })
   }
 
   async sendMessage(request: SendMessageRequest): Promise<Message> {
-    const response: AxiosResponse<Message> = await this.api.post('/chat/messages', request)
-    return response.data
+    return this.post<Message>('/chat/messages', request)
   }
 
   async getOrCreateConversation(otherUserId: number, matchId?: number): Promise<Conversation> {
-    const response: AxiosResponse<Conversation> = await this.api.post('/chat/conversations', null, {
-      params: { otherUserId, matchId }
-    })
-    return response.data
+    return this.post<Conversation>('/chat/conversations', null, { otherUserId, matchId })
   }
 
   async markMessagesAsRead(conversationId: number): Promise<void> {
-    await this.api.put(`/chat/conversations/${conversationId}/read`)
+    return this.put<void>(`/chat/conversations/${conversationId}/read`, null)
   }
 
   async getUnreadMessageCount(): Promise<number> {
-    const response: AxiosResponse<number> = await this.api.get('/chat/unread-count')
-    return response.data
+    return this.get<number>('/chat/unread-count')
+  }
+
+  // Venue API
+  async getAllVenues(): Promise<Venue[]> {
+    return this.get<Venue[]>('/venues')
+  }
+
+  async getVenueById(id: number): Promise<Venue> {
+    return this.get<Venue>(`/venues/${id}`)
+  }
+
+  async getVenuesBySport(sportId: number): Promise<Venue[]> {
+    return this.get<Venue[]>(`/venues/sport/${sportId}`)
+  }
+
+  async getVenuesNearby(latitude: number, longitude: number, radius: number = 10): Promise<Venue[]> {
+    return this.get<Venue[]>('/venues/nearby', { latitude, longitude, radius })
+  }
+
+  async searchVenues(sportId: number, latitude: number, longitude: number, radius: number = 10): Promise<Venue[]> {
+    return this.get<Venue[]>('/venues/search', { sportId, latitude, longitude, radius })
   }
 }
 
