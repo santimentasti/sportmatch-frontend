@@ -2,7 +2,8 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { Suspense, lazy } from 'react'
 import Layout from './components/Layout'
 import LoadingSpinner from './components/ui/LoadingSpinner'
-import { useStore } from './store/useStore'
+import { ProtectedRoute } from './components/ProtectedRoute'
+import { PublicRoute } from './components/PublicRoute'
 
 // Lazy load components for better performance
 const Home = lazy(() => import('./pages/Home.tsx'))
@@ -19,51 +20,146 @@ const Matches = lazy(() => import('./pages/Matches.tsx'))
 const Login = lazy(() => import('./pages/Login.tsx'))
 const NotFound = lazy(() => import('./pages/NotFound.tsx'))
 
-// Protected Route Component
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useStore()
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />
-}
-
-// Public Route Component (redirects to home if authenticated)
-const PublicRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useStore()
-  return isAuthenticated ? <Navigate to="/" replace /> : <>{children}</>
-}
-
 function App() {
-  const { isAuthenticated } = useStore()
-
   return (
-    <>
-      {isAuthenticated ? (
-        <Layout>
-          <Suspense fallback={<LoadingSpinner />}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/sports" element={<SportSelection />} />
-              <Route path="/sport-profile" element={<SportProfile />} />
-              <Route path="/matching/:sportId" element={<Matching />} />
-              <Route path="/chat" element={<ChatList />} />
-              <Route path="/chat/:conversationId" element={<ChatWindow />} />
-              <Route path="/venues" element={<VenueMap />} />
-              <Route path="/notifications" element={<Notifications />} />
-              <Route path="/matches" element={<Matches />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/profile/stats" element={<ProfileEnhanced />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        </Layout>
-      ) : (
-        <Suspense fallback={<LoadingSpinner />}>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </Routes>
-        </Suspense>
-      )}
-    </>
+    <Suspense fallback={<LoadingSpinner />}>
+      <Routes>
+        {/* Rutas Públicas */}
+        <Route 
+          path="/login" 
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          } 
+        />
+
+        {/* Rutas Protegidas */}
+        <Route 
+          path="/" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Home />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/sports" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <SportSelection />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/sport-profile" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <SportProfile />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/matching/:sportId" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Matching />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/chat" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <ChatList />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/chat/:conversationId" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <ChatWindow />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/venues" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <VenueMap />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/notifications" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Notifications />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/matches" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Matches />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/profile" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Profile />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/profile/stats" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <ProfileEnhanced />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+
+        {/* 404 y Fallback */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </Suspense>
   )
 }
 

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Eye, EyeOff, Mail, Lock, User, Phone } from 'lucide-react'
 import { useStore } from '@/store/useStore'
@@ -10,7 +10,8 @@ import { MOTIVATIONAL_TEXTS } from '@/constants/motivationalTexts'
 
 const Login = () => {
   const navigate = useNavigate()
-  const { setCurrentUser, setToken } = useStore()
+  const location = useLocation()
+  const { setCurrentUser, setToken, setRefreshToken } = useStore()
   const [isLogin, setIsLogin] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -22,14 +23,22 @@ const Login = () => {
     phoneNumber: ''
   })
 
+  // Obtener la ruta desde donde vino el usuario (si fue redirigido)
+  const from = (location.state as any)?.from?.pathname || '/'
+
   const loginMutation = useMutation({
     mutationFn: (payload: { email: string; password: string }) =>
       apiService.login(payload),
     onSuccess: (response) => {
+      // Guardar usuario y tokens
       setCurrentUser(response.user)
       setToken(response.token)
+      setRefreshToken(response.refreshToken)
+      
       toast.success(MOTIVATIONAL_TEXTS.auth.loginSuccess)
-      navigate('/')
+      
+      // Redirigir a la ruta original o home
+      navigate(from, { replace: true })
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || 'Error en la autenticación')
@@ -41,10 +50,15 @@ const Login = () => {
     mutationFn: (payload: { email: string; password: string; firstName: string; lastName: string; phoneNumber?: string }) =>
       apiService.register(payload),
     onSuccess: (response) => {
+      // Guardar usuario y tokens
       setCurrentUser(response.user)
       setToken(response.token)
+      setRefreshToken(response.refreshToken)
+      
       toast.success(MOTIVATIONAL_TEXTS.auth.registerSuccess)
-      navigate('/sport-profile')
+      
+      // Redirigir al perfil deportivo para completar datos
+      navigate('/sport-profile', { replace: true })
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || 'Error en la autenticación')

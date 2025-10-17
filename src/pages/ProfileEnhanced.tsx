@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   User,
@@ -10,16 +10,20 @@ import {
   Calendar,
   Award,
   Activity,
-  ChevronRight
+  ChevronRight,
+  LogOut,
+  Settings
 } from 'lucide-react'
 import { useStore } from '@/store/useStore'
 import { apiService } from '@/services/api'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import toast from 'react-hot-toast'
+import { MOTIVATIONAL_TEXTS } from '@/constants/motivationalTexts'
 import type { UserStats } from '@/types'
 
 const ProfileEnhanced = () => {
-  const { currentUser } = useStore()
+  const { currentUser, logout, token } = useStore()
+  const navigate = useNavigate()
   const [stats, setStats] = useState<UserStats | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -321,7 +325,45 @@ const ProfileEnhanced = () => {
             <span className="font-medium text-gray-900">Mis Conversaciones</span>
             <ChevronRight className="w-5 h-5 text-gray-400" />
           </Link>
+          <Link
+            to="/profile"
+            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <Settings className="w-5 h-5 text-gray-600" />
+              <span className="font-medium text-gray-900">Configuración</span>
+            </div>
+            <ChevronRight className="w-5 h-5 text-gray-400" />
+          </Link>
         </div>
+      </motion.div>
+
+      {/* Logout Section (Mobile) */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.7 }}
+        className="md:hidden card"
+      >
+        <button
+          onClick={async () => {
+            try {
+              if (token) {
+                await apiService.logout()
+              }
+            } catch (error) {
+              console.error('Error during logout:', error)
+            } finally {
+              logout()
+              toast.success(MOTIVATIONAL_TEXTS.auth.logoutSuccess)
+              navigate('/login', { replace: true })
+            }
+          }}
+          className="flex items-center justify-center gap-2 w-full p-4 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium"
+        >
+          <LogOut className="w-5 h-5" />
+          <span>Cerrar Sesión</span>
+        </button>
       </motion.div>
     </div>
   )
